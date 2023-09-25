@@ -1,0 +1,19 @@
+import math
+
+x = float(input('Введите желаемые радианы'))
+e = 0.1 ** 52
+sum = 0
+n = 1
+def factor(k):
+    if (k==0):
+        return 1
+    else:
+        return(factor(k-1))*k
+
+
+while (abs((x**(2*n-1))/(factor(n)))>e): #т.е больше бесконечно малого числа с заданной величиной
+    q = x
+    x = q * (-1) * (x * x) / ((2 * n + 1) * (2 * n))
+    sum = sum+q
+    n=n+1
+print("Ряд тейлора заданных градусов равен:", sum)
