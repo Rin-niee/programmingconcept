@@ -1,41 +1,24 @@
 import math
 
-x = float(input('Введите желаемые радианы'))
-e = 0.1 ** 52
-sum = 0
-n = 1
-def factor(k):
-    if (k==0):
-        return 1
-    else:
-        return(factor(k-1))*k
+x = 100
+if (x>=3.6): #если радианы больше радиан 360 градусов, идет вычетание в обратную сторону
+    while (x>=3.6):
+        x = x-3.6
 
-
-while (abs((x**(2*n-1))/(factor(n)))>e): #т.е больше бесконечно малого числа с заданной величиной
-    q = x
-    x = q * (-1) * (x * x) / ((2 * n + 1) * (2 * n))
-    sum = sum+q
-    n=n+1
-print("Ряд тейлора заданных градусов равен:", sum)
-
-
-
-import math
-
-x = float(input('Введите желаемые радианы'))
 e = 0.1 ** 52
 q=x
-sin = 0
+sin = 0.0
 n = 1
 def factor(k):
     if (k==0):
         return 1
     else:
-        return(factor(k-1))*k
+        return(factor(k-1)*k)
 
 
 while (abs(q)>e): #т.е больше бесконечно малого числа с заданной величиной
-    q = (-1) ** (n//2) * (x**n)/factor(n)
+    q = (((-1) ** (n//2)) * (x**n))/factor(n)
     sin = sin+q
     n=n+2
+    t = math.sin(x)
 print("Ряд тейлора заданных градусов равен:", sin)
