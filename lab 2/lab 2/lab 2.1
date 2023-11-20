@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Ôóíêöèÿ äëÿ âûäåëåíèÿ äèíàìè÷åñêîé ïàìÿòè ïîä ìàòðèöó
+int** allocateMatrix(int rows, int cols) 
+{
+	int i;
+    int** matrix = (int**)malloc(rows * sizeof(int*));
+    for (i = 0; i < rows; i++) 
+	{
+        matrix[i] = (int*)malloc(cols * sizeof(int));
+    }
+    return matrix;
+}
+
+// Ôóíêöèÿ äëÿ îñâîáîæäåíèÿ ïàìÿòè, âûäåëåííîé ïîä ìàòðèöó
+void freeMatrix(int** matrix, int rows) 
+{
+	int i;
+    for (i = 0; i < rows; i++) 
+	{
+        free(matrix[i]);
+    }
+    free(matrix);
+}
+
+// Ôóíêöèÿ äëÿ óìíîæåíèÿ ìàòðèö ñ èñïîëüçîâàíèåì äåëåíèÿ íà áëîêè
+void multiplyMatrixBlock(int** A, int** B, int** C, int size, int blockSize) 
+{
+	int i,j, k, ii, jj, kk;
+    for (i = 0; i < size; i += blockSize) 
+	{
+        for (j = 0; j < size; j += blockSize) 
+		{
+            for (k = 0; k < size; k += blockSize) 
+			{
+                // Óìíîæåíèå áëîêîâ ìàòðèö
+                for (ii = 0; ii < blockSize; ii++) 
+				{
+                    for (jj = 0; jj < blockSize; jj++) 
+					{
+                        for (kk = 0; kk < blockSize; kk++) 
+						{
+                            C[i + ii][j + jj] += A[i + ii][k + kk] * B[k + kk][j + jj];
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+int main() 
+{
+	double time_clock = 0.0;
+    int size; // Ðàçìåðíîñòü ìàòðèö
+    int blockSize=100; // Ðàçìåð áëîêà
+    int i,j;
+
+    // Ââîä ðàçìåðíîñòè ìàòðèö ñ êîíñîëè
+    printf("Enter matrix size: ");
+    scanf("%d", &size);
+
+
+    // Âûäåëåíèå äèíàìè÷åñêîé ïàìÿòè ïîä ìàòðèöû A, B, C
+    int** A = allocateMatrix(size, size);
+    int** B = allocateMatrix(size, size);
+    int** C = allocateMatrix(size, size);
+
+    // Çàïîëíåíèå ìàòðèö A è B ñëó÷àéíûìè çíà÷åíèÿìè
+    for (i = 0; i < size; i++) 
+	{
+        for (j = 0; j < size; j++) 
+		{
+            A[i][j] = rand() % 100;
+            B[i][j] = rand() % 100;
+            C[i][j] = 0; // Èíèöèàëèçàöèÿ ìàòðèöû C íóëÿìè
+        }
+    }
+
+    // Óìíîæåíèå ìàòðèö ñ èñïîëüçîâàíèåì äåëåíèÿ íà áëîêè
+    clock_t opening = clock();
+    multiplyMatrixBlock(A, B, C, size, blockSize);
+    clock_t ending = clock();
+    time_clock = (double)(ending - opening) / CLOCKS_PER_SEC;
+    printf("%lf", time_clock);
+
+    // Îñâîáîæäåíèå äèíàìè÷åñêîé ïàìÿòè
+    freeMatrix(A, size);
+    freeMatrix(B, size);
+    freeMatrix(C, size);
+
+    return 0;
+}
